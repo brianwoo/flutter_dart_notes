@@ -23,12 +23,14 @@ sealed class LoginResponse with _$LoginResponse {
     String? location,
     @JsonKey(name: 'set-cookie') String? setCookie,
     String? date,
+    @Default(4) required int wheels,
   }) = _LoginResponse;
 
-  // Convert json map to a data object
+  // Convert json map to a data file
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseFromJson(json);
 }
+
 ```
 - To auto generate Dart data files (In project directory)
 ```bash
