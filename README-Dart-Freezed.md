@@ -25,7 +25,7 @@ sealed class LoginResponse with _$LoginResponse {
     String? date,
   }) = _LoginResponse;
 
-  // Convert json map to a data file
+  // Convert json map to a data object
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseFromJson(json);
 }
@@ -33,5 +33,15 @@ sealed class LoginResponse with _$LoginResponse {
 - To auto generate Dart data files (In project directory)
 ```bash
 dart run build_runner build --delete-conflicting-outputs
+```
+
+## fromJson (Json -> Data object)
+```dart
+final loginResp = LoginResponse.fromJson(response.headers);
+```
+
+## toJson (Data object -> Json)
+```dart
+final jsonObj = loginResp.toJson()
 ```
 
