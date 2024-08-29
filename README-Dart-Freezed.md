@@ -14,6 +14,33 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'login_response.freezed.dart';
 part 'login_response.g.dart';
 
+String? cookieAspXformAuthFromJson(String? cookie) {
+  if (cookie == null) {
+    return null;
+  }
+
+  final cookieSplitted = cookie.split(';');
+  if (cookieSplitted.isEmpty) {
+    return null;
+  }
+
+  String foundFormsAuth = cookieSplitted.firstWhere(
+    (element) => element.contains('.ASPXFORMSAUTH'),
+    orElse: () => '',
+  );
+
+  if (foundFormsAuth.isEmpty) {
+    return null;
+  }
+
+  final foundFormsAuthSplitted = foundFormsAuth.split('=');
+  if (foundFormsAuthSplitted.length < 2) {
+    return null;
+  }
+
+  return foundFormsAuthSplitted[1];
+}
+
 // Use @freezed annotation
 @freezed
 // Use the Mix-in
@@ -21,8 +48,18 @@ sealed class LoginResponse with _$LoginResponse {
   // Create a factory constructor with fields
   factory LoginResponse({
     String? location,
-    @JsonKey(name: 'set-cookie') String? setCookie,
     String? date,
+
+    // This attribute in the JSON object is named 'set-cookie'
+    // But we want this set-cookie string processed
+    // in function cookieAspXformAuthFromJson(), which extracts the
+    // aspXFormAuth string and store this extract string in the attribute
+    // called formAuth in our data object.
+    @JsonKey(name: 'set-cookie', fromJson: cookieAspXformAuthFromJson)
+    String? formAuth,
+
+    // Default will return a default value if the attribute wheels does NOT
+    // exist in the JSON object.
     @Default(4) int wheels,
   }) = _LoginResponse;
 
