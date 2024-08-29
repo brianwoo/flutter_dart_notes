@@ -23,7 +23,7 @@ sealed class LoginResponse with _$LoginResponse {
     String? location,
     @JsonKey(name: 'set-cookie') String? setCookie,
     String? date,
-    @Default(4) required int wheels,
+    @Default(4) int wheels,
   }) = _LoginResponse;
 
   // Convert json map to a data file
