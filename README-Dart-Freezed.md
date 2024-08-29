@@ -6,7 +6,7 @@
 
 ## Code Setup
 
-- Data class Setup:
+- Data class Setup. Make sure to follow _$XXX and _XXX naming conventions
 ```dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -29,5 +29,9 @@ sealed class LoginResponse with _$LoginResponse {
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseFromJson(json);
 }
-
 ```
+- To auto generate Dart data files
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
