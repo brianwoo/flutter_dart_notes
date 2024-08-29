@@ -30,7 +30,7 @@ sealed class LoginResponse with _$LoginResponse {
       _$LoginResponseFromJson(json);
 }
 ```
-- To auto generate Dart data files
+- To auto generate Dart data files (In project directory)
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
