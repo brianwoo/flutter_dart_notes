@@ -21,7 +21,7 @@ sealed class LoginResponse with _$LoginResponse {
   // Create a factory constructor with fields
   factory LoginResponse({
     String? location,
-    String? setCookie,
+    @JsonKey(name: 'set-cookie') String? setCookie,
     String? date,
   }) = _LoginResponse;
 
