@@ -124,8 +124,8 @@ class PlacesNotifier extends AsyncNotifier<List<Place>> {
 
   ///
   /// build() - this is called when:
-  /// 1. Initially to provide a initial value
-  /// 2. After ref.invalidateSelf() is called
+  /// 1. Initially to provide a initial value (which can just return [] - for Option 1)
+  /// 2. After ref.invalidateSelf() is called (this example, will pull data from db again)
   @override
   Future<List<Place>> build() async {
     final db = await _getDatabase();
