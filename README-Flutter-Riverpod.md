@@ -195,7 +195,8 @@ final placesProvider = AsyncNotifierProvider<PlacesNotifier, List<Place>>(() {
     final places = ref.watch(placesProvider);
 
     return places.when(
-      skipLoadingOnRefresh: false,  // this will make sure the "loading" block is triggered even on each data update
+      // this will make sure the "loading" block is triggered on each data update
+      skipLoadingOnRefresh: false,  
       data: (data) => ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
