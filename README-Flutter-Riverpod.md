@@ -21,21 +21,33 @@ void main() {
 }
 ```
 
-- Next:
-  - add a Provider / Notifier to provide data & functions
-  - add a Consumer to access data & functions
-  
+### Concept:
+- Provider (For simple data)
+- Notifier (For data via a Provider + more complex way to update the state, functions)
+- Consumer (Stateful/Stateless Widgets, read and watch to access data)
+
 <br>
 
 ## Providers
 
-### Create a Provider (Provider is for STATIC data)
-- Add Flutter Riverpod Snippet Extension from Robert Brunhage
+### Create a Provider (Provider is for STATIC state)
+- Provider will cache data until ref.invalidate() / ref.invalidateSelf() is called
 ```dart
-// Use snippet - type: provider
-final mealsProvider = Provider<List<Meal>>((ref) {
+// Regular provider
+@riverpod
+List<Meal> meals(MealsRef ref) {
   return dummyMeals;
-});
+}
+
+// Async provider
+@riverpod
+Future<List<Meal>> meals(MealsRef ref) {
+  return dummyMeals;
+}
+
+// To access provider
+final meals = ref.read(mealsProvider);
+final meals = ref.watch(mealsProvider);
 ```
 
 ## SYNCHRONOUS Provider and Notifier
