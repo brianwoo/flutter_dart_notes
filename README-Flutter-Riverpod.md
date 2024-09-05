@@ -25,7 +25,15 @@ void main() {
 - Provider (For simple data)
 - Notifier (For data via a Provider + more complex way to update the state, functions)
 - Consumer (Stateful/Stateless Widgets, read and watch to access data)
+- Watch for changes, file stubs will be generated
 
+Generate file stubs
+```bash
+dart run build_runner build --delete-conflicting-outputs
+
+# keep watching for changes
+dart run build_runner watch --delete-conflicting-outputs
+```
 <br>
 
 ## Providers
