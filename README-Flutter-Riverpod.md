@@ -51,13 +51,13 @@ List<Meal> meals(MealsRef ref) {
 
 // Async provider
 @riverpod
-Future<List<Meal>> meals(MealsRef ref) {
+Future<List<Meal>> meals(MealsRef ref) async {
   return dummyMeals;
 }
 
 // Provider + parameter
 @riverpod
-Future<List<Meal>> meals(MealsRef ref, int mealId) {
+Future<List<Meal>> meals(MealsRef ref, int mealId) async {
   return getDummyMeals(mealId);
 }
 
@@ -286,6 +286,30 @@ List<Meal> filteredMeals(FilterMealsRef ref) {
   }).toList();
 }
 
+```
+
+## AsyncValue vs Future
+- AsyncValue can trigger screen reload with data, error and loading callbacks. Good when it's used within a Widget.
+- Future does not support these callbacks; however, it can be used with await. Good when it's used in non-Widgets.
+```dart
+// AsyncValue
+ref.watch(CurrentBusDataProvider(userData.userName!)).when(
+      skipLoadingOnRefresh: false,
+      data: (data) {
+        return ListView.builder(...);
+      },
+      error: (error, stackTrace) {
+        return Center(child: Text(e.toString())),
+      },
+      loading: () {
+        return const Center(child: CircularProgressIndicator()),
+      },
+    );
+
+// Future
+final registeredRoutes =
+    await ref.read(registeredRoutesProvider(userName).future);
+registeredRoutes.map(...).toList();
 ```
 
 
