@@ -50,13 +50,18 @@ final meals = ref.read(mealsProvider);
 final meals = ref.watch(mealsProvider);
 ```
 
-## SYNCHRONOUS Provider and Notifier
-
-### Create a NotifierProvider & Notifier (notifier is for CHANGABLE data)
-- Add the NotifierProvider & Notifier boilerplate code
+## Notifier
+- Provider will be auto generated as part of the Notifier
+  
 ```dart
-// Use snippet - type: stateNotifier
-class FavoriteMealsNotifier extends Notifier<List<Meal>> {
+@riverpod
+class FavoriteMeals extends _$FavoriteMeals {
+
+  @override
+  List<Meal> build() {
+    // initial value
+    return [];
+  }
 
   // NOTE: always create a new object (list in this case)
   bool toggleMealFavoriteStatus(Meal meal) {
@@ -70,18 +75,14 @@ class FavoriteMealsNotifier extends Notifier<List<Meal>> {
       return true;
     }
   }
-
-  @override
-  List<Meal> build() {
-    // initial value
-    return [];
-  }
 }
 
-// Use snippet - type: stateNotifierProvider
-final favoriteMealsProvider =
-    NotifierProvider<FavoriteMealsNotifier, List<Meal>>(
-        () => FavoriteMealsNotifier());
+// To access provider
+final meals = ref.watch(favoriteMealsProvider);
+
+// To access notifier method
+final isFav = ref.read(favoriteMealsProvider.notifier).toggleMealFavoriteStatus(meal);
+
 ```
 
 ## ASYNCHRONOUS Provider and Notifier
