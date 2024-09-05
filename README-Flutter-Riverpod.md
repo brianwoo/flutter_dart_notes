@@ -33,6 +33,8 @@ void main() {
 ### Create a Provider (Provider is for STATIC state)
 - Provider will cache data until ref.invalidate() / ref.invalidateSelf() is called
 ```dart
+part 'meals_provider.g.dart';
+
 // Regular provider
 @riverpod
 List<Meal> meals(MealsRef ref) {
@@ -45,15 +47,24 @@ Future<List<Meal>> meals(MealsRef ref) {
   return dummyMeals;
 }
 
+// Provider + parameter
+@riverpod
+Future<List<Meal>> meals(MealsRef ref, int mealId) {
+  return getDummyMeals(mealId);
+}
+
 // To access provider
 final meals = ref.read(mealsProvider);
 final meals = ref.watch(mealsProvider);
+final meals = ref.watch(mealsProvider(mealId)); // data cached by mealId
 ```
 
 ## Notifier
 - Provider will be auto generated as part of the Notifier
   
 ```dart
+part 'favorite_meals_provider.g.dart';
+
 @riverpod
 class FavoriteMeals extends _$FavoriteMeals {
 
@@ -85,24 +96,24 @@ final isFav = ref.read(favoriteMealsProvider.notifier).toggleMealFavoriteStatus(
 
 ```
 
-## ASYNCHRONOUS Provider and Notifier
+## Notifier (trigger reload + update state)
 
-### Create a AsyncNotifierProvider & AsyncNotifier (notifier is for CHANGABLE data)
-- boilerplate code:
 ```dart
-// Use snippet - type: asyncNotifier
-class PlacesNotifier extends AsyncNotifier<List<Place>> {
+part 'places_provider.g.dart';
+
+@riverpod
+class Places extends _$Places {
   ///
   /// 2 Options to update the state and trigger a automatic reload in the UI:
   ///
 
   ///
   /// Option 1: Update local state manually
-  /// This method will NOT trigger the notifier.build() again
+  /// This method will NOT trigger the build() again
   ///
   /// Use case: the remote API (DB or REST API) returns a newly inserted obj.
   ///
-  void addPlaceAndUpdateLocalState(Place newPlace) async {
+  Future<void> addPlaceAndUpdateLocalState(Place newPlace) async {
     final db = await _getDatabase();
 
     db.insert('user_places', {
@@ -125,7 +136,7 @@ class PlacesNotifier extends AsyncNotifier<List<Place>> {
   /// This method WILL trigger the notifier.build() again
   ///
   /// Use case: the remote API (DB or REST API) DOES NOT return a newly
-  /// inserted obj. Notifier.build() will be called to pull data.
+  /// inserted obj. build() will be called to pull data.
   ///
   void addPlaceAndInvalidate(Place newPlace) async {
     final db = await _getDatabase();
@@ -161,10 +172,6 @@ class PlacesNotifier extends AsyncNotifier<List<Place>> {
     return places;
   }
 }
-
-final placesProvider = AsyncNotifierProvider<PlacesNotifier, List<Place>>(() {
-  return PlacesNotifier();
-});
 ```
 
 <hr>
@@ -183,11 +190,14 @@ final placesProvider = AsyncNotifierProvider<PlacesNotifier, List<Place>>(() {
 - If change from StatelessWidget
   - StatelessWidget -> ConsumerWidget
   - build(BuildContext ctx) -> build(BuildContext ctx, WidgetRef ref)
- 
+
+### Trigger a Provider data reload
+- Use ref.invalidate() in Widget
+  
 <hr>
 <br>
 
-## Access to NotifierProvider / Provider
+## Access to Notifier / Provider
 - Access NotifierProvider by ref
   - ref.read(): will only read the value ONCE
   - ref.watch(): will monitor and read the value when changed. When a value has been changed, the build() method will get triggered to rebuild the widget tree. This can help eliminating the need for ConsumerStatefulWidget.
@@ -204,8 +214,8 @@ final placesProvider = AsyncNotifierProvider<PlacesNotifier, List<Place>>(() {
 }
 ```
 
-## Access to AsyncNotifierProvider
-- AsyncNotifierProvider returns an AsyncValue object
+## Access to Async Notifier / Provider
+- Async Provider returns an AsyncValue object
 - AsyncValue is NOT compatible with FutureBuilder, use:
   - AsyncValue.data, AsyncValue.error, AsyncValue.loading instead
 ```dart
@@ -234,7 +244,7 @@ final placesProvider = AsyncNotifierProvider<PlacesNotifier, List<Place>>(() {
   }
 ```
 
-## Access to Notifier (To update a value)
+## Access to Notifier (To update state)
 - Access Notifier by ref.read(provider.notifier)
 ```dart
 Widget build(BuildContext context, WidgetRef ref) {
@@ -248,13 +258,14 @@ Widget build(BuildContext context, WidgetRef ref) {
 ```
 
 
-
-
-
 ## Provider depends on another Provider
 - it's possible to do it like React Hook where a Hook depends on a value change
 ```dart
-final filteredMealProvider = Provider<List<Meal>>((ref) {
+part 'filtered_meals_provider.g.dart';
+
+@riverpod
+List<Meal> filteredMeals(FilterMealsRef ref) {
+
   // depending on filtersProvider
   final filters = ref.watch(filtersProvider);
 
@@ -265,7 +276,8 @@ final filteredMealProvider = Provider<List<Meal>>((ref) {
         m.isVegetarian == filters[Filter.vegetarian] &&
         m.isVegan == filters[Filter.vegan];
   }).toList();
-});
+}
+
 ```
 
 
