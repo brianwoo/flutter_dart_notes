@@ -41,23 +41,25 @@ dart run build_runner watch --delete-conflicting-outputs
 ### Create a Provider (Provider is for STATIC state)
 - Provider will cache data until ref.invalidate() / ref.invalidateSelf() is called
 ```dart
+// file: meals_provider.dart
+
 part 'meals_provider.g.dart';
 
 // Regular provider
 @riverpod
-List<Meal> meals(MealsRef ref) {
+List<Meal> meals(Ref ref) {
   return dummyMeals;
 }
 
 // Async provider
 @riverpod
-Future<List<Meal>> meals(MealsRef ref) async {
+Future<List<Meal>> meals(Ref ref) async {
   return dummyMeals;
 }
 
 // Provider + parameter
 @riverpod
-Future<List<Meal>> meals(MealsRef ref, int mealId) async {
+Future<List<Meal>> meals(Ref ref, int mealId) async {
   return getDummyMeals(mealId);
 }
 
