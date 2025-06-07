@@ -45,28 +45,28 @@ dart run build_runner watch --delete-conflicting-outputs
 
 part 'meals_provider.g.dart';
 
-// Regular provider
+// Regular provider (auto generated: mealsProvider)
 @riverpod
 List<Meal> meals(Ref ref) {
   return dummyMeals;
 }
 
-// Async provider
+// Async provider (auto generated: mealsAsyncProvider)
 @riverpod
-Future<List<Meal>> meals(Ref ref) async {
+Future<List<Meal>> mealsAsync(Ref ref) async {
   return dummyMeals;
 }
 
-// Provider + parameter
+// Provider + parameter (auto generated: mealsFilterProvider)
 @riverpod
-Future<List<Meal>> meals(Ref ref, int mealId) async {
+Future<List<Meal>> mealsFilter(Ref ref, int mealId) async {
   return getDummyMeals(mealId);
 }
 
 // To access provider
 final meals = ref.read(mealsProvider);
-final meals = ref.watch(mealsProvider);
-final meals = ref.watch(mealsProvider(mealId)); // data cached by mealId
+final meals = ref.watch(mealsAsyncProvider);
+final meals = ref.watch(mealsFilterProvider(mealId)); // data cached by mealId
 ```
 
 ## Notifier
@@ -274,7 +274,7 @@ Widget build(BuildContext context, WidgetRef ref) {
 part 'filtered_meals_provider.g.dart';
 
 @riverpod
-List<Meal> filteredMeals(FilterMealsRef ref) {
+List<Meal> filteredMeals(Ref ref) {
 
   // depending on filtersProvider
   final filters = ref.watch(filtersProvider);
